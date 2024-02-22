@@ -1,0 +1,80 @@
+<!doctype html>
+<link rel="stylesheet" href="popup.css">
+
+<div id="popup">
+	<h1>Starknet Gas Price</h1>
+	<button id="refresh-button" data-content-loaded="false"></button>
+	<table id="StarknetGas">
+		<tr class="row-with-colspan">
+			<td />
+			<td class="label" colspan="3">Gas of Featured Actions</td>
+			<td />
+		</tr>
+		<tr>
+			<td />
+			<td class="label">STRK</td>
+			<td class="label">ETH(GWei)</td>
+			<td class="label">USDT</td>
+			<td />
+		</tr>
+		<tr id="Transfer">
+			<td>Transfer</td>
+			<td class="strk" data-source="Transfer|0">...</td>
+			<td class="eth" data-source="Transfer|1">...</td>
+			<td class="USDT" data-source="Transfer|2">...</td>
+			<td class="timestamp"></td>
+		</tr>
+		<tr id="TransferERC20">
+			<td>Transfer(ERC20)</td>
+			<td class="strk" data-source="TransferERC20|0">...</td>
+			<td class="eth" data-source="TransferERC20|1">...</td>
+			<td class="USDT" data-source="TransferERC20|2">...</td>
+			<td class="timestamp"></td>
+		</tr>
+		<tr id="Swap">
+			<td>Swap</td>
+			<td class="strk" data-source="Swap|0">...</td>
+			<td class="eth" data-source="Swap|1">...</td>
+			<td class="USDT" data-source="Swap|2">...</td>
+			<td class="timestamp"></td>
+		</tr>
+	</table>
+	<hr />
+	<table id="L1Gas">
+		<tr class="row-with-colspan">
+			<td />
+			<td class="label" colspan="3">L1 gas</td>
+			<td />
+		</tr>
+		<tr>
+			<td />
+			<td class="label">Fast</td>
+			<td class="label">Normal</td>
+			<td class="label">Slow</td>
+			<td />
+		</tr>
+		<tr id="blocknative">
+			<td><a href="https://www.blocknative.com/gas-estimator" target="_blank">Blocknative</a></td>
+			<td class="fast" data-source="blocknative|0">...</td>
+			<td class="normal" data-source="blocknative|1">...</td>
+			<td class="slow" data-source="blocknative|2">...</td>
+			<td class="timestamp"></td>
+		</tr>
+		<tr id="etherscan">
+			<td><a href="https://etherscan.io/gastracker" target="_blank">Etherscan</a></td>
+			<td class="fast" data-source="etherscan|0">...</td>
+			<td class="normal" data-source="etherscan|1">...</td>
+			<td class="slow" data-source="etherscan|2">...</td>
+			<td class="timestamp"></td>
+		</tr>
+	</table>
+	<hr />
+	<table>
+		<tr class="row-with-colspan">
+			<td class="label" colspan="2"><a href="https://status.starknet.io/" target="_blank">Network Status</a></td>
+			<td class="status" id="network-status">Unknown</td>
+		</tr>
+	</table>
+</div>
+
+<script src="popup.js"></script>
