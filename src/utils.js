@@ -61,12 +61,17 @@ const getNetworkStatus = memoizeAsync(
       })
 );
 
+/*
+ * Fetches the current exchange rates for ETH to USDT and STRK_MULTIPLIER
+ * from the Coinbase API.
+ */
+
 const getETHExchangeRates = memoizeAsync(
   async () =>
     await fetch("https://api.coinbase.com/v2/exchange-rates?currency=ETH")
       .then((response) => response.json())
       .then((data) => {
-        return [data.data.rates.USDT, data.data.rates.STRK];
+        return [data.data.rates.USDT, data.data.rates.STRK]; // USDT and STRK rate as MULTIPLIER
       })
       .catch((error) => {
         console.error("Error fetching the ETH rate:", error);
@@ -74,4 +79,10 @@ const getETHExchangeRates = memoizeAsync(
       })
 );
 
-export { debounce, getBlocknativeData, getEtherscanData, getNetworkStatus, getETHExchangeRates};
+export {
+  debounce,
+  getBlocknativeData,
+  getEtherscanData,
+  getNetworkStatus,
+  getETHExchangeRates,
+};
