@@ -61,14 +61,12 @@ const getNetworkStatus = memoizeAsync(
       })
 );
 
-const getETHExchangeRate = memoizeAsync(
+const getETHExchangeRates = memoizeAsync(
   async () =>
     await fetch("https://api.coinbase.com/v2/exchange-rates?currency=ETH")
       .then((response) => response.json())
       .then((data) => {
-        const ETHRate = data.data.rates.USDT;
-        console.log(`ETH Rate for USDT: ${ETHRate}`);
-        return ETHRate;
+        return [data.data.rates.USDT, data.data.rates.STRK];
       })
       .catch((error) => {
         console.error("Error fetching the ETH rate:", error);
@@ -76,4 +74,4 @@ const getETHExchangeRate = memoizeAsync(
       })
 );
 
-export { debounce, getBlocknativeData, getEtherscanData, getNetworkStatus, getETHExchangeRate};
+export { debounce, getBlocknativeData, getEtherscanData, getNetworkStatus, getETHExchangeRates};

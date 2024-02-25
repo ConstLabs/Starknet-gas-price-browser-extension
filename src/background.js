@@ -4,7 +4,7 @@ import {
   getBlocknativeData,
   getEtherscanData,
   getNetworkStatus,
-  getETHExchangeRate,
+  getETHExchangeRates,
   debounce,
 } from "./utils.js";
 
@@ -13,7 +13,6 @@ const DECIMALS_GWEI = 1e9;
 const TRANSFER_STEPS = 2809;
 const TRANSFER_ERC_20_STEPS = 4701;
 const SWAP_STEPS = 9100;
-const GAS_STRK_MULTIPLIER = 1405;
 const GAS_FIXER = 1;
 
 const gweiToEth = (gwei) => {
@@ -111,17 +110,17 @@ const setStoredBadgeContent = async (badgeContent) =>
     chrome.storage.local.set({ badgeContent }, () => res());
   });
 
-const getStoredETHExchangeRate = () =>
+const getStoredETHExchangeRates = () =>
   new Promise((res) => {
-    chrome.storage.local.get(["ETHExchangeRate"], (result) => {
-      const defaultETHExchangeRate = 0;
-      res((result && result.ETHExchangeRate) || defaultETHExchangeRate);
+    chrome.storage.local.get(["ETHExchangeRates"], (result) => {
+      const defaultETHExchangeRates = [0,0];
+      res((result && result.ETHExchangeRates) || defaultETHExchangeRates);
     });
   });
 
-const setStoredETHExchangeRate = async (ETHExchangeRate) =>
+const setStoredETHExchangeRates = async (ETHExchangeRates) =>
   new Promise((res) => {
-    chrome.storage.local.set({ ETHExchangeRate }, () => res());
+    chrome.storage.local.set({ ETHExchangeRates }, () => res());
   });
 
 const getStoredNetworkStatus = () =>
@@ -189,19 +188,19 @@ const saveFetchedPricesForProvider = async (source, prices) => {
   lock.release();
 };
 
-const parseStarknetGasPrice = (L1GasPrice, ETHExchangeRate, steps) => {
+const parseStarknetGasPrice = (L1GasPrice, ETHExchangeRates, steps) => {
   const L2GasPriceGwei = L1GasPrice * GAS_FIXER * steps;
   const L2GasPrice = gweiToEth(L2GasPriceGwei);
-  const StarknetGasPrice = L2GasPrice * GAS_STRK_MULTIPLIER;
-  return [StarknetGasPrice, Math.trunc(L2GasPriceGwei), L2GasPrice * ETHExchangeRate];
+  const StarknetGasPrice = L2GasPrice * ETHExchangeRates[1];
+  return [StarknetGasPrice, Math.trunc(L2GasPriceGwei), L2GasPrice * ETHExchangeRates[0]];
 };
 
 const fetchPrices = () => {
   /// Fetch all the data
   Promise.all([
-    fetchETHExchangeRate().catch((err) => {
+    fetchETHExchangeRates().catch((err) => {
       console.error(err);
-      return 0; // Default to 0 if there's an error fetching the ETH exchange rate
+      return [0,0]; // Default to 0 if there's an error fetching the ETH exchange rate
     }),
     fetchBlocknativeData().catch((err) => {
       console.error(err);
@@ -212,28 +211,28 @@ const fetchPrices = () => {
       ];
     }),
   ])
-    .then(([ETHExchangeRate, [prices, pricesFeaturedActions]]) => {
+    .then(([ETHExchangeRates, [prices, pricesFeaturedActions]]) => {
       // Once both promises are resolved, handle their results
 
       // Handle the ETH exchange rate
-      setStoredETHExchangeRate(ETHExchangeRate);
+      setStoredETHExchangeRates(ETHExchangeRates);
 
       // Handle the Blocknative data
       if (prices && prices[1]) {
         // Ensure there's data to parse
         const transferGasPrice = parseStarknetGasPrice(
           prices[1],
-          ETHExchangeRate,
+          ETHExchangeRates,
           TRANSFER_STEPS
         );
         const transferERC20GasPrice = parseStarknetGasPrice(
           prices[1],
-          ETHExchangeRate,
+          ETHExchangeRates,
           TRANSFER_ERC_20_STEPS
         );
         const swapGasPrice = parseStarknetGasPrice(
           prices[1],
-          ETHExchangeRate,
+          ETHExchangeRates,
           SWAP_STEPS
         );
         saveFetchedPricesForProvider("Swap", swapGasPrice);
@@ -303,8 +302,8 @@ const fetchNetworkStatus = debounce(async () => {
   return response;
 });
 
-const fetchETHExchangeRate = debounce(async () => {
-  const response = await getETHExchangeRate();
+const fetchETHExchangeRates = debounce(async () => {
+  const response = await getETHExchangeRates();
   return response;
 });
 
