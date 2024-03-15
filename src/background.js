@@ -10,9 +10,9 @@ import {
 
 const DECIMALS_WEI = 1e18;
 const DECIMALS_GWEI = 1e9;
-const TRANSFER_STEPS = 2809;
-const TRANSFER_ERC_20_STEPS = 4701;
-const SWAP_STEPS = 9100;
+const TRANSFER_STEPS = 27;
+const TRANSFER_ERC_20_STEPS = 40;
+const SWAP_STEPS = 90;
 const GAS_FIXER = 1;
 
 const gweiToEth = (gwei) => {
@@ -53,7 +53,7 @@ const formatValue = (value) =>
   typeof value === "number" && !isNaN(value)
     ? value > 10
       ? `${Math.trunc(value)}`
-      : `${value.toFixed(2)}`
+      : `${value.toFixed(3)}`
     : "...";
 
 const updateBadgeValue = ({ prices, badgeSource }) => {
