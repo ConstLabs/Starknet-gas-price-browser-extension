@@ -49,12 +49,22 @@ chrome.storage.onChanged.addListener(async (changes, areaName) => {
   }
 });
 
-const formatValue = (value) =>
-  typeof value === "number" && !isNaN(value)
-    ? value > 10
-      ? `${Math.trunc(value)}`
-      : `${value.toFixed(3)}`
-    : "...";
+// FormatValue: formats the value to be displayed on the badge
+const formatValue = (value) => {
+  if (typeof value !== "number" || isNaN(value)) {
+    return "...";
+  }
+
+  if (value > 10) {
+    return `${Math.trunc(value)}`;
+  } else if (value < 0.001) {
+    return `${(value * 10000).toFixed(0)}‱`;
+  } else if (value < 0.01) {
+    return `${(value * 1000).toFixed(0)}‰`;
+  } else {
+    return `${value.toFixed(3)}`;
+  }
+};
 
 const updateBadgeValue = ({ prices, badgeSource }) => {
   const [preferredProvider, preferredSpeed] = badgeSource.split("|");

@@ -63,7 +63,7 @@ const updateDOMForProvider = (provider, prices) => {
       prices[provider][1]
     );
     document.querySelector(`#${provider} .USDT`).textContent = formatStarknetPrice(
-      prices[provider][2].toFixed(3)
+      prices[provider][2].toFixed(4)
     );
   } else {
     console.log("p2:"+prices[provider]);

@@ -1,6 +1,6 @@
 {
   "name": "Starknet Gas Price",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "manifest_version": 3,
   "description": "Starknet gas price tracker, provide all the info about the current gas price on Starknet&Ethereum you need.",
   "homepage_url": "https://github.com/cryptonerdcn/Starknet-gas-price-browser-extension",
